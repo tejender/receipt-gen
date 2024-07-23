@@ -6,6 +6,8 @@ import { shareAsync } from 'expo-sharing'
 import TextField from '@/components/TextField'
 import DateField from '@/components/DateField'
 import SelectPicker from '@/components/SelectPicker'
+import { StatusBar } from 'expo-status-bar'
+import Footer from '@/components/Footer'
 
 const Home = () => {
     const [form, setForm] = useState({
@@ -68,7 +70,7 @@ const Home = () => {
             }
                 .receipt-details p strong{
                 
-                color: red;
+                color: #1B1212;
             }
                 
             .footer {
@@ -86,7 +88,7 @@ const Home = () => {
             <h1>Booking Confirmation Receipt</h1>
             <h2>${form.cottageName}</h2>
             <div class="header">
-                <p style="background-color:yellow; padding:4px ;width:fit-content;border-radius:5px:font-weight:700;">Dear ${form.guestName},</p>
+                <b style="background-color:yellow;color:gray; padding:8px ;width:fit-content;border-radius:20px:">Dear ${form.guestName},</b>
                 <p style="line-height:30px;">We are delighted to confirm your booking for the <b>${form.cottageName}</b>. Your stay is scheduled from <b> ${form.checkIn.toLocaleDateString()}</b> to <b>${form.checkOut.toLocaleDateString()}</b>.</p>
                 <p>We have received your advance payment of <b>₹ ${form.depositedAmount}</b>. The remaining balance is due upon arrival.</p>
             </div>
@@ -97,11 +99,11 @@ const Home = () => {
                 <p><strong>Number of Guests :</strong> ${form.adults} Adults, ${form.children} Children, ${form.pets} Pets </p>
                 <p><strong>Check-in :</strong> ${form.checkIn.toLocaleDateString()}</p>
                 <p><strong>Check-out :</strong> ${form.checkOut.toLocaleDateString()}</p>
-                <p><strong>Total Amount :</strong> ₹${form.totalAmount}</p>
-                <p><strong>Advance Payment Received :</strong> ₹${form.depositedAmount}</p>
-                <p><strong>Balance Due :</strong> ₹${parseFloat(form.totalAmount) - parseFloat(form.depositedAmount)}</p>
+                <p><strong>Total Amount :</strong> ₹ ${form.totalAmount}</p>
+                <p><strong>Advance Payment Received :</strong> ₹ ${form.depositedAmount}</p>
+                <p><strong>Balance Due :</strong> ₹ ${parseFloat(form.totalAmount) - parseFloat(form.depositedAmount)}</p>
                 <p><strong>Meal Plan :</strong> ${form.mealPlan} </p>
-                <p><strong>Host Contact :</strong> ${form.hostName} will be your point of contact during your stay. You can reach him/her at ${form.hostContact} </p>
+                <p><strong>Host Contact :</strong> <b style="color:brown">${form.hostName}</b> will be your point of contact during your stay. You can reach him/her at <b style="color:brown">${form.hostContact}</b> </p>
                 </div>
             <div class="footer">
                 <p>We can't wait to welcome you to ${form.cottageName}</p>
@@ -109,6 +111,7 @@ const Home = () => {
                 <p>The ${form.cottageName} Team</p>
             </div>
 
+            
             <p style=" margin-top:80px;border: 1px solid gray; padding:10px 10px 10px 10px  ">If you have any questions or issues, please contact us at ${form.supportContact}</p>
             
         </div>
@@ -137,12 +140,12 @@ const Home = () => {
                     <TextField title='Cottage Name' value={form.cottageName}
                         handleChangeText ={(e:any)=>setForm({
                             ...form,cottageName:e
-                        })} placeholder='Enter Cottage Name' required ={true} />
+                        })} placeholder='Enter Cottage Name' required ={true} keyboardType=''/>
 
                     <TextField title='Booked By' value={form.guestName}
                         handleChangeText ={(e:any)=>setForm({
                             ...form,guestName:e
-                        })} placeholder='Person Who made Reservation' required ={true}/>
+                        })} placeholder='Person Who made Reservation' required ={true} keyboardType=''/>
 
                     <View className='flex-row justify-between'>
                         <SelectPicker title='Adults' items={[{label:'1',value:'1'},
@@ -176,12 +179,12 @@ const Home = () => {
                             <TextField title='Total Amount' value={form.totalAmount}
                             handleChangeText ={(e:any)=>setForm({
                                 ...form,totalAmount:e
-                            })} otherStyles = ' w-full' placeholder="Enter Total Amount" required ={true}/>
+                            })} otherStyles = ' w-full' placeholder="Enter Total Amount" required ={true} keyboardType='number-pad'/>
 
                             <TextField title='Advance Received' value={form.depositedAmount}
                             handleChangeText ={(e:any)=>setForm({
                                 ...form,depositedAmount:e
-                            })} otherStyles = 'w-full' placeholder="Advance Received" required ={true}/>
+                            })} otherStyles = 'w-full' placeholder="Advance Received" required ={true} keyboardType='number-pad'/>
                         </View>
 
                     <SelectPicker title='Meal Plan' items={[{label:'European Plan',value:'European Plan (No Meal Included in Pricing)'},
@@ -195,18 +198,18 @@ const Home = () => {
                             <TextField title='Host Name' value={form.hostName}
                             handleChangeText ={(e:any)=>setForm({
                                 ...form,hostName:e
-                            })} otherStyles = ' w-full' placeholder="Host Name" required ={true}/>
+                            })} otherStyles = ' w-full' placeholder="Host Name" required ={true} keyboardType=''/>
 
                             <TextField title="Host Contact" value={form.hostContact}
                             handleChangeText ={(e:any)=>setForm({
                                 ...form,hostContact:e
-                            })} otherStyles = 'w-full' placeholder="Host Contact" required ={true}/>
+                            })} otherStyles = 'w-full' placeholder="Host Contact" required ={true} keyboardType='phone-pad'/>
                         </View>
 
                         <TextField title='Suppot Contact' value={form.supportContact}
                             handleChangeText ={(e:any)=>setForm({
                                 ...form,supportContact:e
-                            })} otherStyles = '' placeholder="Support Contact" required ={true}/>
+                            })} otherStyles = '' placeholder="Support Contact" required ={true} keyboardType='phone-pad'/>
                 </View>
 
                 
@@ -217,8 +220,10 @@ const Home = () => {
                 rounded-lg ' onPress={genPdf}>
                     <Text className='font-bold text-xl '>Generate Pdf</Text>
                 </TouchableOpacity>
+                <Footer/>
                 </View>
                 
+                <StatusBar  backgroundColor='white' style='dark'/>
             </SafeAreaView>
         </ScrollView>
   )
