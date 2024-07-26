@@ -1,5 +1,5 @@
-import { View, Text,Button, TouchableOpacity, ScrollView, } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text,Button, TouchableOpacity, ScrollView,Animated } from 'react-native'
+import React, { useState,useEffect, useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
@@ -8,6 +8,7 @@ import DateField from '@/components/DateField'
 import SelectPicker from '@/components/SelectPicker'
 import { StatusBar } from 'expo-status-bar'
 import Footer from '@/components/Footer'
+import Header from '@/components/Header'
 
 const Home = () => {
     const [form, setForm] = useState({
@@ -25,6 +26,8 @@ const Home = () => {
         hostContact:'',
         supportContact:''
     })
+
+    
 
     const html = `
     <!DOCTYPE html>
@@ -127,15 +130,22 @@ const Home = () => {
         })
         await shareAsync(file.uri)
     }
+    const scrollY = useRef(new Animated.Value(0)).current;
+    const headerHeight = 70; // Adjust header height as needed
+  
+    const headerTranslate = scrollY.interpolate({
+        inputRange: [0, headerHeight],
+        outputRange: [0, -headerHeight],
+        extrapolate: 'clamp',
+      });
   return (
-        <ScrollView >
-            <SafeAreaView className='bg-primary h-full justify-center '>
-                <View className='relative '>
-                    <View className='bg-yellow-200 p-5 w-full rounded-lg'>
-                    <Text className='text-green-700 font-bold text-2xl  text-center'>
-                        Booking Receipt Generator
-                    </Text>
-                    </View>
+        <SafeAreaView className='bg-primary h-full justify-center '>
+        <Header />
+      
+            <ScrollView
+     >
+                <View className='relative mt-[100] '>
+                   
             <View className='px-4 '>
                     <TextField title='Cottage Name' value={form.cottageName}
                         handleChangeText ={(e:any)=>setForm({
@@ -154,7 +164,7 @@ const Home = () => {
                         {label:8,value:8},{label:9,value:9},{label:10,value:10},
                         {label:11,value:11},{label:12,value:13},{label:14,value:14},{label:15,value:15},
                         {label:16,value:16},{label:17,value:17},{label:18,value:18},{label:19,value:19},{label:20,value:20}
-                        ]} value={form.adults} otherStyles='w-[30%]'
+                        ]} value={form.adults} otherStyles='w-[30%] pt-[3px]'
                         onValueChange={(itemValue:any) => setForm({ ...form, adults: itemValue })} required={true}/>
                 
                         <SelectPicker title='Children' items={[{label:'0',value:'0'},{label:'1',value:'1'},
@@ -212,9 +222,6 @@ const Home = () => {
                             })} otherStyles = '' placeholder="Support Contact" required ={true} keyboardType='phone-pad'/>
                 </View>
 
-                
-
-
 
                 <TouchableOpacity className='bg-secondary-200 p-5   items-center my-5 mx-auto w-[95%]
                 rounded-lg ' onPress={genPdf}>
@@ -224,8 +231,8 @@ const Home = () => {
                 </View>
                 
                 <StatusBar  backgroundColor='white' style='dark'/>
-            </SafeAreaView>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
   )
 }
 

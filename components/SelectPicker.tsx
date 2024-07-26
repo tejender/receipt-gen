@@ -21,14 +21,14 @@ const SelectPicker = ({ items, title, value, onValueChange,required, otherStyles
     return (
         <View className={`mt-5 ${otherStyles}`}>
             <LabelText title={title} required={required}/>
-            <View className='bg-[#292940]
-       border-slate-700 border rounded-md mt-2 text-slate-300 '>
+            <View className='bg-[#292940]  border-slate-700 border rounded-md mt-2 text-slate-300 '>
                 <Picker style={{color:'white',}}
                     selectedValue={selectedLanguage}
                     onValueChange={handleValueChange}
                 >
                     {items.map((item:any, index:any) => (
-                        <Picker.Item key={index} label={item.label} value={item.value} />
+                        <Picker.Item key={index} label={item.label} value={item.value}
+                         />
                     ))}
                 </Picker>
             </View>
