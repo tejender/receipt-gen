@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Cottify",
-    "slug": "cottify",
+    "slug": "receipt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
