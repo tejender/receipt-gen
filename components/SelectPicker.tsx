@@ -1,39 +1,56 @@
-import { View, Text } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Picker } from '@react-native-picker/picker'
-import LabelText from './LabelText'
+import { View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
-const SelectPicker = ({ items, title, value, onValueChange,required, otherStyles }:any) => {
-    const [selectedLanguage, setSelectedLanguage] = useState(value)
-    const defaultValue = value || (items.length > 0 ? items[0].value : null);
-    useEffect(() => {
-        if (!value && items.length > 0) {
-          // If no value is provided, set the first item as selected
-          handleValueChange(items[0].value);
-        }
-      }, [items]);
-    
-    const handleValueChange = (itemValue:any) => {
-        setSelectedLanguage(itemValue)
-        onValueChange(itemValue)
+
+const SelectPicker = ({ items, title, value, onValueChange, required, otherStyles }: any) => {
+  // Initialize the selected value state based on the value prop or default to the first item
+  const [selectedLanguage, setSelectedLanguage] = useState(value || (items.length > 0 ? items[0].value : null));
+
+  // Update the state when the value prop changes or when nothing is selected
+  useEffect(() => {
+    if (!value && items.length > 0) {
+      // If no value is provided, set the first item as selected
+      handleValueChange(items[0].value);
     }
+  }, [items,value]);
 
-    return (
-        <View className={`mt-5 ${otherStyles}`}>
-            <LabelText title={title} required={required}/>
-            <View className='bg-[#292940]  border-slate-700 border rounded-md mt-2 text-slate-300 '>
-                <Picker style={{color:'white',}}
-                    selectedValue={selectedLanguage}
-                    onValueChange={handleValueChange}
-                >
-                    {items.map((item:any, index:any) => (
-                        <Picker.Item key={index} label={item.label} value={item.value}
-                         />
-                    ))}
-                </Picker>
-            </View>
-        </View>
-    )
-}
+  // Handle value changes and call onValueChange
+  const handleValueChange = (itemValue: any) => {
+    setSelectedLanguage(itemValue);
+    onValueChange(itemValue);
+  };
 
-export default SelectPicker
+  return (
+    <View style={[{ marginTop: 10 }, otherStyles]}>
+      {title && (
+        <Text style={{ marginBottom: 5, fontSize: 16, fontWeight: 'bold' }}>
+          {title}
+          {required && <Text style={{ color: 'red' }}>*</Text>}
+        </Text>
+      )}
+
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: '#ccc',
+          overflow: 'hidden',
+          borderRadius: 5,
+          backgroundColor: 'white',
+        }}
+      >
+        <Picker
+          style={{ color: 'gray', backgroundColor: 'white' }}
+          selectedValue={selectedLanguage}
+          onValueChange={handleValueChange}
+        >
+          {items.map((item: any, index: any) => (
+            <Picker.Item key={index} label={item.label} value={item.value} />
+          ))}
+        </Picker>
+      </View>
+    </View>
+  );
+};
+
+export default SelectPicker;
