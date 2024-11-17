@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getCurrentUser, getFutureBookingCount } from '../../lib/appwrite';
+import { useUser } from '../context/UserContext';
 
 import CheckoutToday from '../../components/CheckoutToday';
 import CurrentlyHosting from '@/components/CurrentlyHosting';
@@ -10,6 +11,7 @@ const Home: React.FC = () => {
   const [bookingCount, setBookingCount] = useState(0);
   const [activeTab, setActiveTab] = useState('currentlyHosting'); // Set default tab to 'currentlyHosting'
   const navigation = useNavigation();
+  const {hostId, userName} = useUser();
 
   useEffect(() => {
     const fetchBookingCount = async () => {
@@ -28,11 +30,14 @@ const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Dashboard</Text>
+      <View className='space-y-2 mb-10'>
+        <Text className="text-lg ">Welcome Back, </Text>
+        <Text className="text-4xl font-medium capitalize text-gray-600">{userName} </Text>
+      </View>
 
       <TouchableOpacity onPress={handleBookingTabNavigation} style={styles.bookingLink}>
         <Text style={styles.bookingText}>
-          Future Bookings: {bookingCount}
+          Upcoming Bookings : {bookingCount}
         </Text>
       </TouchableOpacity>
 
@@ -73,15 +78,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   bookingLink: {
-    backgroundColor: '#3498db',
+    backgroundColor: 'black',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
+    
   },
   bookingText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight:'bold'
   },
   tabContainer: {
     flexDirection: 'row',

@@ -111,12 +111,15 @@ const FoodOrders: React.FC<FoodOrdersProps> = ({ onClose, orderItems, setOrderIt
             )}
           />
         )}
-        <TouchableOpacity onPress={handleSubmitOrder} style={{ marginTop: 20, backgroundColor: '#0000ff', padding: 10, borderRadius: 5 }}>
+        <View className='flex flex-row items-center gap-x-5 justify-center'>
+
+        <TouchableOpacity onPress={handleSubmitOrder} style={{ marginTop: 20, backgroundColor: 'black', padding: 10, borderRadius: 5 }}>
           <Text style={{ color: '#fff', textAlign: 'center' }}>Submit Order</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onClose} style={{ marginTop: 10 }}>
-          <Text style={{ color: '#0000ff', textAlign: 'center' }}>Close</Text>
+        <TouchableOpacity onPress={onClose} style={{  marginTop: 20, backgroundColor: 'white', padding: 8, borderRadius: 5,borderWidth:1 }}>
+          <Text style={{ color: 'black', textAlign: 'center' }}>Close</Text>
         </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );

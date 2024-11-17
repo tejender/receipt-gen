@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Modal, Linking } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Modal, Alert, Linking,Platform, PermissionsAndroid } from 'react-native';
 import { getCurrentUser, getUpcomingBookings } from '../../lib/appwrite';
 import BookingForm from '../../components/BookingForm';
-import { Calendar, HomeIcon, Phone, X, ChevronDown } from 'lucide-react-native';
+import { Calendar, HomeIcon, Phone, X, ChevronDown, UserPlus } from 'lucide-react-native';
 import moment from 'moment';
 import { convertDateToMonthName } from '../../lib/dateConverter';
 import WhatsAppButton from '@/components/Widgets/WhatsappWidget';
 import CallButton from '@/components/Widgets/CallWidget';
+
 
 const Home: React.FC = () => {
   const [upcomingBookings, setUpcomingBookings] = useState<any[]>([]);
@@ -15,6 +16,9 @@ const Home: React.FC = () => {
   const [filter, setFilter] = useState('No Filter');
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
+ 
+  
+ 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -33,9 +37,11 @@ const Home: React.FC = () => {
     fetchBookings();
   }, []);
 
-  const applyFilter = (bookings:any) => {
+
+
+  const applyFilter = (bookings: any) => {
     const today = moment();
-    const filteredBookings = bookings.filter((booking:any) => {
+    const filteredBookings = bookings.filter((booking: any) => {
       const checkInDate = moment(booking.checkIn);
 
       switch (filter) {
@@ -61,7 +67,6 @@ const Home: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Upcoming Bookings</Text>
 
-      
       <View style={styles.dropdownContainer}>
         <TouchableOpacity
           style={styles.dropdownButton}
@@ -106,23 +111,20 @@ const Home: React.FC = () => {
               <View style={styles.infoRow}>
                 <Calendar color={"gray"} height={20} width={20} />
                 <Text style={styles.infoText}>
-                {convertDateToMonthName(item.checkIn)} - {convertDateToMonthName(item.checkOut)}
+                  {convertDateToMonthName(item.checkIn)} - {convertDateToMonthName(item.checkOut)}
                 </Text>
               </View>
 
               <View style={styles.infoRow}>
                 <Phone color={"gray"} height={20} width={20} />
-                
-                  <Text style={styles.infoText}>{item.contact}</Text>
-                
+                <Text style={styles.infoText}>{item.contact}</Text>
               </View>
 
               <View style={styles.buttonRow}>
-                <WhatsAppButton contact={item.contact}  stylez=''>
+                <WhatsAppButton contact={item.contact} stylez="">
                   <Text>Whatsapp</Text>
                 </WhatsAppButton>
-
-                <CallButton contact={item.contact} stylez=''>
+                <CallButton contact={item.contact} stylez="">
                   <Text>Call</Text>
                 </CallButton>
               </View>
@@ -133,12 +135,10 @@ const Home: React.FC = () => {
         <Text style={styles.noBookingsText}>No upcoming bookings found.</Text>
       )}
 
-     
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.addButton}>
         <Text style={styles.addButtonText}>Add New Booking</Text>
       </TouchableOpacity>
 
-     
       <Modal
         animationType="slide"
         transparent={true}
@@ -153,8 +153,6 @@ const Home: React.FC = () => {
                 <X height={20} width={20} color={"black"} />
               </TouchableOpacity>
             </View>
-
-      
             <BookingForm onClose={() => setModalVisible(false)} />
           </View>
         </View>
@@ -162,6 +160,9 @@ const Home: React.FC = () => {
     </View>
   );
 };
+
+
+
 
 const styles = StyleSheet.create({
   container: {

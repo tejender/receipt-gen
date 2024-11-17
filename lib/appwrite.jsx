@@ -1,10 +1,11 @@
 import { Client, Account, ID, Databases, Query } from 'react-native-appwrite';
 
-const databaseId = '672873b6001d81cb4224'; // Replace with your Appwrite Database ID
+const databaseId = '672873b6001d81cb4224'; 
 const menuCollectionId = '672873c500074e357c8d';
 const bookingCollectionId = '6729cfe0000176e82412';
 const cottagesCollectionId = '6729d7410025a7f1d089';
 const ordersCollectionId = '672db87a001b21d38f1a';
+const hostCollectionId = '6732faee001e59728e0c'
 
 
 
@@ -63,6 +64,17 @@ const ordersCollectionId = '672db87a001b21d38f1a';
     
       export const logout = async () => {
         return await account.deleteSession('current'); // 'current' to log out the logged-in user
+      };
+
+
+      export const fetchHostDetails = async (hostId) => {
+        try {
+          const response = await databases.getDocument(databaseId, hostCollectionId,hostId);
+          return response;
+        } catch (error) {
+          console.error("Failed to fetch host details:", error);
+          throw error;
+        }
       };
 
       export const saveBooking = async (bookingData) => {
@@ -267,6 +279,101 @@ export const deleteOrderById = async (orderId) => {
     console.log("Order deleted successfully.");
   } catch (error) {
     console.error("Error deleting order:", error);
+    throw error;
+  }
+};
+
+
+export const addProperty = async (hostId, newPropertyName) => {
+  try {
+    // Fetch the current document
+    const document = await databases.getDocument(databaseId, hostCollectionId, hostId);
+
+    // Get the current businessEntities array
+    const currentEntities = document.businessEntities || [];
+
+    // Add the new property to the array
+    const updatedEntities = [...currentEntities, newPropertyName];
+
+    // Update the document with the new businessEntities array
+    const updatedDocument = await databases.updateDocument(
+      databaseId,
+      hostCollectionId,
+      hostId,
+      {
+        businessEntities: updatedEntities,
+      }
+    );
+
+    return updatedDocument;
+  } catch (error) {
+    console.error("Error adding property:", error);
+    throw error;
+  }
+};
+
+
+// Function to delete a property from the array
+export const deleteProperty = async (hostId, propertyName) => {
+  try {
+   
+
+    // Fetch the current document
+    const document = await databases.getDocument(databaseId, hostCollectionId, hostId);
+
+    // Get the current businessEntities array
+    const currentEntities = document.businessEntities || [];
+
+    // Filter out the property to delete
+    const updatedEntities = currentEntities.filter((property) => property !== propertyName);
+
+    // Update the document with the new businessEntities array
+    const updatedDocument = await databases.updateDocument(
+      databaseId,
+      hostCollectionId,
+      hostId,
+      {
+        businessEntities: updatedEntities,
+      }
+    );
+
+    return updatedDocument;
+  } catch (error) {
+    console.error("Error deleting property:", error);
+    throw error;
+  }
+};
+
+
+export const updateProperty = async (hostId, oldProperty, newProperty) => {
+  try {
+    const documentId = hostId; // Assuming hostId is the document ID for the host
+     
+
+    // Fetch the current document
+    const document = await databases.getDocument(databaseId, hostCollectionId, documentId);
+
+    // Get the current businessEntities array
+    const businessEntities = document.businessEntities || [];
+
+    // Update the array: replace the old property with the new one
+    const updatedBusinessEntities = businessEntities.map((property) => 
+      property === oldProperty ? newProperty : property
+    );
+
+    // Update the document with the new businessEntities array
+    const updatedDocument = await databases.updateDocument(
+      databaseId,
+      hostCollectionId,
+      documentId,
+      {
+        businessEntities: updatedBusinessEntities,
+      }
+    );  
+
+    return updatedDocument;
+  } catch (error) {
+    console.error("Error updating property:", error);
     throw error;
   }
 };

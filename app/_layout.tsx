@@ -38,7 +38,6 @@ export default function RootLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       {/* Define your tab layout as the root screen */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      
       {/* Booking details and other screens for deeper navigation */}
       <Stack.Screen name="BookingDetail"  options={{ headerShown: true, title: 'Booking Details' }} />
   

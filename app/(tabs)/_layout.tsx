@@ -24,6 +24,11 @@ export default function TabLayout() {
     }
   };
 
+  const navigateToProfile = () => {
+    setIsMorePopupVisible(false); // Close popup
+    router.push('/profile'); // Replace '/profile' with the correct path to your profile screen
+  };
+
   return (
     <Layout>
       <Tabs
@@ -74,6 +79,12 @@ export default function TabLayout() {
             ),
           }}
         />
+              <Tabs.Screen
+          name="profile"
+          options={{
+            href: null, // This will hide the tab but keep the route accessible
+          }}
+  />
       </Tabs>
 
       {/* Popup Menu for "More" Tab */}
@@ -94,7 +105,7 @@ export default function TabLayout() {
 
             <View style={styles.popupItemContainer}>
               <User size={20} style={styles.popupItem} color={'#3498db'}/>
-            <TouchableOpacity onPress={() => setIsMorePopupVisible(false)}>
+            <TouchableOpacity onPress={navigateToProfile}>
               <Text style={styles.popupItem}>Profile</Text>
             </TouchableOpacity>
             </View>

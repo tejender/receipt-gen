@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { getOrdersByBookingId, deleteOrderById } from '../lib/appwrite'; // Import deleteOrderById function
-import { Delete, LucideTrash2, Trash } from 'lucide-react-native';
+import {  CircleX, CrossIcon, LucideTrash2 } from 'lucide-react-native';
+import GenerateBill from './Widgets/GenerateBill';
 
 interface OrderItem {
   id: string;
@@ -14,9 +15,10 @@ interface OrderDetailsProps {
   isVisible: boolean;
   onClose: () => void;
   bookingId: string;
+  bookingDetails: any;
 }
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({ isVisible, onClose, bookingId }) => {
+const OrderDetails: React.FC<OrderDetailsProps> = ({ isVisible, onClose, bookingId,bookingDetails }) => {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,11 +59,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ isVisible, onClose, booking
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Order Details</Text>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <CircleX height={30} width={30} color="black" />
+            </TouchableOpacity>
           {isLoading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : orderItems.length > 0 ? (
             <>
-              <FlatList
+              <FlatList className='overflow-y-auto max-h-[80%]'
                 data={orderItems}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
@@ -87,9 +92,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ isVisible, onClose, booking
           ) : (
             <Text>No order items found.</Text>
           )}
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          <View className='flex flex-row justify-center items-center space-x-5 w-full'>
+            
+            <GenerateBill orderItems={orderItems} bookingId={bookingId} bookingDetails={bookingDetails} 
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -102,6 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+  
   },
   modalContainer: {
     width: '90%',
@@ -109,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     alignItems: 'center',
+    height:'90%'
   },
   title: {
     fontSize: 18,
@@ -153,9 +162,12 @@ const styles = StyleSheet.create({
     color: '#0000ff',
   },
   closeButton: {
+    position: 'absolute',
+    right: 10,
+    top: -10,
     marginTop: 20,
     padding: 10,
-    backgroundColor: 'black',
+  
     borderRadius: 5,
   },
   closeButtonText: {
